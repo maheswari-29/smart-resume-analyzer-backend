@@ -7,7 +7,12 @@ from resume_parser import parse_resume
 from skills import extract_skills, calculate_match
 
 app = Flask(__name__)
-CORS(app)
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=True
+)
+
 
 # =======================
 # Upload folder (Render-safe)
