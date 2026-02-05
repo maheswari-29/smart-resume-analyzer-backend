@@ -93,6 +93,10 @@ def analyze_resume():
 def health():
     return jsonify({"status": "ok"}), 200
 
+@app.route("/", methods=["GET"])
+def health():
+    return {"status": "Backend is live 🚀"}, 200
+
 
 if __name__ == "__main__":
     import os
