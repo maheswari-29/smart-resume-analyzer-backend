@@ -12,12 +12,11 @@ def parse_resume(filepath):
             return f.read()
 
     if ext == ".pdf":
-        # 1️⃣ Try normal text extraction
         text = extract_text_from_pdf(filepath)
         if text and len(text.strip()) > 50:
             return text
 
-        # 2️⃣ Fallback to OCR (for scanned PDFs)
+        # Fallback to OCR for scanned PDFs
         return extract_text_with_ocr(filepath)
 
     return ""
@@ -33,7 +32,6 @@ def extract_text_from_pdf(filepath):
                     text += page_text + "\n"
     except Exception:
         pass
-
     return text
 
 
@@ -42,11 +40,7 @@ def extract_text_with_ocr(filepath):
     try:
         images = convert_from_path(filepath, dpi=300)
         for img in images:
-            text += pytesseract.image_to_string(
-                img,
-                config="--psm 6"
-            )
+            text += pytesseract.image_to_string(img, config="--psm 6")
     except Exception as e:
         print("OCR ERROR:", e)
-
     return text
