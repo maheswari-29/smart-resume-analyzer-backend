@@ -1,8 +1,6 @@
 flask
 flask-cors
-pdfplumber
-python-docx
-pytesseract
-Pillow
-pdf2image
 gunicorn
+pytesseract
+pdf2image
+Pillow

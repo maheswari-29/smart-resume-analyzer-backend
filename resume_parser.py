@@ -1,46 +1,51 @@
-import os
-import pdfplumber
 import pytesseract
 from pdf2image import convert_from_path
-
-
-def parse_resume(filepath):
-    ext = os.path.splitext(filepath)[1].lower()
-
-    if ext == ".txt":
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
-            return f.read()
-
-    if ext == ".pdf":
-        text = extract_text_from_pdf(filepath)
-        if text and len(text.strip()) > 50:
-            return text
-
-        # Fallback to OCR for scanned PDFs
-        return extract_text_with_ocr(filepath)
-
-    return ""
-
+from PIL import Image
+import os
+import docx
 
 def extract_text_from_pdf(filepath):
     text = ""
+
     try:
-        with pdfplumber.open(filepath) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text + "\n"
-    except Exception:
+        from PyPDF2 import PdfReader
+        reader = PdfReader(filepath)
+        for page in reader.pages:
+            text += page.extract_text() or ""
+    except:
         pass
-    return text
+
+    return text.strip()
 
 
-def extract_text_with_ocr(filepath):
+def ocr_pdf(filepath):
+    images = convert_from_path(filepath)
     text = ""
-    try:
-        images = convert_from_path(filepath, dpi=300)
-        for img in images:
-            text += pytesseract.image_to_string(img, config="--psm 6")
-    except Exception as e:
-        print("OCR ERROR:", e)
-    return text
+
+    for img in images:
+        text += pytesseract.image_to_string(img)
+
+    return text.strip()
+
+
+def parse_resume(filepath):
+    ext = filepath.split(".")[-1].lower()
+
+    if ext == "pdf":
+        text = extract_text_from_pdf(filepath)
+
+        # OCR fallback
+        if not text or len(text) < 50:
+            text = ocr_pdf(filepath)
+
+        return text
+
+    elif ext == "docx":
+        doc = docx.Document(filepath)
+        return "\n".join(p.text for p in doc.paragraphs)
+
+    elif ext == "txt":
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+            return f.read()
+
+    return ""
