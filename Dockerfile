@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 10000
 
 # Start app with gunicorn
-CMD gunicorn app:app --bind 0.0.0.0:$PORT
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000", "--timeout", "120"]
