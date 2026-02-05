@@ -10,29 +10,32 @@ app = Flask(__name__)
 CORS(app)
 
 # =======================
-# Upload folder (outside project directory)
+# Upload folder (Render-safe)
 # =======================
-UPLOAD_FOLDER = os.path.join(
-    os.path.expanduser("~"),
-    "Documents",
-    "resume_uploads"
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
 ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
 
 # Create uploads folder if it doesn't exist
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
 
 
 def allowed_file(filename):
-    return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-    )
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route("/", methods=["GET"])
+def home():
+    return {"status": "Backend is live 🚀"}, 200
+
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
 
 
 @app.route("/analyze", methods=["POST"])
@@ -64,8 +67,8 @@ def analyze_resume():
         if not resume_text:
             os.remove(filepath)
             return jsonify({
-                "error": "Unable to extract text from PDF. "
-                         "Please upload a text-based PDF or TXT file."
+                "error": "Unable to extract text from file. "
+                         "Please upload a text-based PDF, DOCX, or TXT file."
             }), 400
 
         resume_skills = extract_skills(resume_text)
@@ -89,17 +92,6 @@ def analyze_resume():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"}), 200
-
-@app.route("/", methods=["GET"])
-def health():
-    return {"status": "Backend is live 🚀"}, 200
-
-
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
