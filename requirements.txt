@@ -4,3 +4,5 @@ gunicorn
 pytesseract
 pdf2image
 Pillow
+python-docx
+PyPDF2
