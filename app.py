@@ -7,37 +7,38 @@ from resume_parser import parse_resume
 from skills import extract_skills, calculate_match
 
 app = Flask(__name__)
-
-# ✅ SIMPLE & CORRECT CORS
 CORS(app)
 
-# =======================
-# Upload folder (Render-safe)
-# =======================
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
-
 ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB
-
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"status": "Backend is live 🚀"}), 200
 
-
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "ok"}), 200
 
+@app.route("/analyze", methods=["OPTIONS"])
+def analyze_options():
+    return jsonify({"ok": True}), 200
 
 @app.route("/analyze", methods=["POST"])
 def analyze_resume():
@@ -52,9 +53,7 @@ def analyze_resume():
             return jsonify({"error": "Empty file or job description"}), 400
 
         if not allowed_file(file.filename):
-            return jsonify({
-                "error": "Unsupported file type. Use PDF, DOCX, or TXT"
-            }), 400
+            return jsonify({"error": "Unsupported file type"}), 400
 
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
@@ -65,9 +64,7 @@ def analyze_resume():
 
         if not resume_text:
             os.remove(filepath)
-            return jsonify({
-                "error": "Unable to extract text from file."
-            }), 400
+            return jsonify({"error": "Unable to extract text"}), 400
 
         resume_skills = extract_skills(resume_text)
         job_skills = extract_skills(job_description)
@@ -90,8 +87,3 @@ def analyze_resume():
             "error": "Resume processing failed",
             "details": str(e)
         }), 500
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
