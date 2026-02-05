@@ -1,0 +1,118 @@
+{
+  "programming_languages": [
+    "python", "java", "c", "c++", "c#", "javascript", "typescript", "go", "rust", "php"
+  ],
+
+  "web_technologies": [
+    "html", "css", "sass", "bootstrap", "tailwind",
+    "react", "angular", "vue",
+    "node", "express", "flask", "django", "spring", "spring boot"
+  ],
+
+  "databases": [
+    "mysql", "postgresql", "mongodb", "sqlite", "oracle", "redis", "cassandra"
+  ],
+
+  "cloud_platforms": [
+    "aws", "azure", "gcp", "firebase"
+  ],
+
+  "devops_tools": [
+    "git", "github", "gitlab", "bitbucket",
+    "docker", "kubernetes",
+    "jenkins", "github actions"
+  ],
+
+  "data_science_ml": [
+    "numpy", "pandas", "matplotlib", "seaborn",
+    "scikit-learn", "tensorflow", "keras", "pytorch",
+    "opencv", "nlp"
+  ],
+
+  "testing_tools": [
+    "pytest", "unittest", "selenium", "cypress", "jest"
+  ],
+
+  "api_technologies": [
+    "rest", "rest api", "graphql", "soap"
+  ],
+
+  "mobile_development": [
+    "android", "kotlin", "swift", "flutter", "react native"
+  ],
+
+  "operating_systems": [
+    "linux", "windows", "macos", "unix"
+  ],
+
+  "software_concepts": [
+    "oops", "object oriented programming",
+    "data structures", "algorithms",
+    "multithreading", "microservices",
+    "design patterns", "system design"
+  ],
+
+  "security": [
+    "authentication", "authorization",
+    "jwt", "oauth", "encryption"
+  ],
+
+  "other_tools": [
+    "postman", "swagger", "jira", "confluence",
+    "vs code", "intellij", "pycharm"
+  ],
+  
+  "finance_accounting": [
+    "financial analysis", "budgeting", "forecasting",
+    "accounting", "tally", "gst", "taxation",
+    "auditing", "cost accounting"
+  ],
+
+  "business_management": [
+    "project management", "people management",
+    "stakeholder management", "business analysis",
+    "strategic planning", "operations management"
+  ],
+
+  "marketing_sales": [
+    "digital marketing", "seo", "sem",
+    "content marketing", "email marketing",
+    "social media marketing",
+    "sales", "lead generation", "crm"
+  ],
+
+  "human_resources": [
+    "recruitment", "talent acquisition",
+    "employee engagement", "performance management",
+    "hr policies", "payroll", "onboarding"
+  ],
+
+  "communication_skills": [
+    "communication", "verbal communication",
+    "written communication", "presentation skills",
+    "negotiation", "public speaking"
+  ],
+
+  "soft_skills": [
+    "leadership", "teamwork", "problem solving",
+    "critical thinking", "time management",
+    "adaptability", "decision making"
+  ],
+
+  "operations_supply_chain": [
+    "supply chain management", "logistics",
+    "inventory management", "procurement",
+    "vendor management", "quality assurance"
+  ],
+
+  "education_training": [
+    "teaching", "training", "curriculum development",
+    "lesson planning", "student assessment"
+  ],
+
+  "general_tools": [
+    "ms word", "ms excel", "ms powerpoint",
+    "google docs", "google sheets",
+    "jira", "confluence", "postman"
+  ]
+}
