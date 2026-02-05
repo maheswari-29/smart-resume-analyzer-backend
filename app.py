@@ -7,12 +7,9 @@ from resume_parser import parse_resume
 from skills import extract_skills, calculate_match
 
 app = Flask(__name__)
-CORS(
-    app,
-    resources={r"/*": {"origins": "*"}},
-    supports_credentials=True
-)
 
+# ✅ SIMPLE & CORRECT CORS
+CORS(app)
 
 # =======================
 # Upload folder (Render-safe)
@@ -22,7 +19,6 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
 ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
 
-# Create uploads folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -35,7 +31,7 @@ def allowed_file(filename):
 
 @app.route("/", methods=["GET"])
 def home():
-    return {"status": "Backend is live 🚀"}, 200
+    return jsonify({"status": "Backend is live 🚀"}), 200
 
 
 @app.route("/health", methods=["GET"])
@@ -63,17 +59,14 @@ def analyze_resume():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
 
-        # Save file
         file.save(filepath)
 
-        # Parse resume
         resume_text = parse_resume(filepath)
 
         if not resume_text:
             os.remove(filepath)
             return jsonify({
-                "error": "Unable to extract text from file. "
-                         "Please upload a text-based PDF, DOCX, or TXT file."
+                "error": "Unable to extract text from file."
             }), 400
 
         resume_skills = extract_skills(resume_text)
@@ -84,7 +77,6 @@ def analyze_resume():
 
         match_percentage = calculate_match(matched_skills, job_skills)
 
-        # Delete file after processing
         os.remove(filepath)
 
         return jsonify({
